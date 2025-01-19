@@ -1,0 +1,131 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sakura Mood Tracker</title>
+    <style>
+        body {
+            background-color: #ffe4e1; /* Soft pink for cherry blossom vibe */
+            font-family: "Arial", sans-serif; /* Clean and readable font */
+            margin: 0;
+            padding: 0;
+        }
+
+        .container {
+            max-width: 600px;
+            margin: 50px auto;
+            text-align: center;
+            background: #ffffff;
+            border-radius: 15px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+            padding: 20px;
+        }
+
+        h1 {
+            color: #ff7f7f; /* Soft sakura pink */
+            font-size: 2rem;
+            margin-bottom: 10px;
+        }
+
+        p {
+            color: #333;
+            font-size: 1rem;
+            margin: 10px 0;
+        }
+
+        .mood-buttons {
+            display: flex;
+            justify-content: space-around;
+            margin: 20px 0;
+        }
+
+        .mood-button {
+            background-color: #ffd9dc;
+            border: 2px solid #ffb6c1;
+            border-radius: 50%;
+            width: 60px;
+            height: 60px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-size: 1.5rem;
+            color: #ff7f7f;
+            cursor: pointer;
+            transition: transform 0.2s ease;
+        }
+
+        .mood-button:hover {
+            transform: scale(1.1);
+        }
+
+        .weekly-summary {
+            margin-top: 30px;
+        }
+
+        .bar-chart {
+            display: flex;
+            justify-content: space-around;
+            align-items: flex-end;
+            height: 150px;
+            margin: 20px 0;
+            background: #ffe4e1;
+            padding: 10px;
+            border: 1px solid #ffc0cb;
+            border-radius: 10px;
+        }
+
+        .bar {
+            width: 40px;
+            background-color: #ff7f7f;
+            border-radius: 5px;
+            text-align: center;
+            color: #ffffff;
+            font-size: 0.8rem;
+        }
+
+        footer {
+            font-size: 0.8rem;
+            color: #888;
+            margin-top: 20px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Sakura Mood Tracker</h1>
+        <p>Track your mood every day 🌸</p>
+        
+        <div class="mood-buttons">
+            <div class="mood-button" id="happy" onclick="trackMood('Happy')">😊</div>
+            <div class="mood-button" id="sad" onclick="trackMood('Sad')">😢</div>
+            <div class="mood-button" id="angry" onclick="trackMood('Angry')">😡</div>
+            <div class="mood-button" id="excited" onclick="trackMood('Excited')">🤩</div>
+            <div class="mood-button" id="calm" onclick="trackMood('Calm')">😌</div>
+        </div>
+
+        <div class="weekly-summary">
+            <h2>Weekly Mood Summary</h2>
+            <div class="bar-chart" id="barChart">
+                <div class="bar" style="height: 30%;" title="Monday">Mon</div>
+                <div class="bar" style="height: 50%;" title="Tuesday">Tue</div>
+                <div class="bar" style="height: 70%;" title="Wednesday">Wed</div>
+                <div class="bar" style="height: 40%;" title="Thursday">Thu</div>
+                <div class="bar" style="height: 60%;" title="Friday">Fri</div>
+                <div class="bar" style="height: 80%;" title="Saturday">Sat</div>
+                <div class="bar" style="height: 90%;" title="Sunday">Sun</div>
+            </div>
+        </div>
+    </div>
+
+    <footer>🌸 Embrace the beauty of every day 🌸</footer>
+
+    <script>
+        function trackMood(mood) {
+            alert(`You selected: ${mood}`);
+            // Logic for saving the mood can be added here
+        }
+    </script>
+</body>
+</html>

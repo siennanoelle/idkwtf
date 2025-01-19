@@ -23,6 +23,8 @@
       padding: 20px;
       box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
       width: 400px;
+      max-height: 90vh;
+      overflow-y: auto;
     }
 
     .widget-header {
@@ -67,15 +69,15 @@
     .bar-container {
       display: flex;
       justify-content: space-around;
+      margin-top: 10px;
     }
 
     .bar {
       width: 40px;
-      height: 100px;
       display: flex;
       flex-direction: column;
       justify-content: flex-end;
-      background-color: #FFB7C5; /* Sakura pink */
+      background-color: #FFB7C5;
       border-radius: 5px;
       position: relative;
     }
@@ -98,6 +100,27 @@
       font-size: 14px;
       color: #666;
     }
+
+    .history {
+      margin-top: 20px;
+    }
+
+    .history h3 {
+      text-align: center;
+      font-size: 16px;
+      color: #333;
+    }
+
+    .history ul {
+      list-style: none;
+      padding: 0;
+      font-size: 14px;
+      color: #555;
+    }
+
+    .history ul li {
+      margin: 5px 0;
+    }
   </style>
 </head>
 <body>
@@ -118,7 +141,11 @@
       <div class="bar-container" id="barContainer"></div>
     </div>
     <div class="weekly-summary">
-      <p id="weeklySummary">No data for past weeks yet.</p>
+      <p id="weeklySummary">No weekly summary yet.</p>
+    </div>
+    <div class="history">
+      <h3>Weekly History</h3>
+      <ul id="historyList"></ul>
     </div>
   </div>
 
@@ -132,6 +159,7 @@
     const today = new Date().toISOString().split("T")[0];
     const barContainer = document.getElementById("barContainer");
     const weeklySummary = document.getElementById("weeklySummary");
+    const historyList = document.getElementById("historyList");
 
     const renderChart = () => {
       barContainer.innerHTML = "";
@@ -154,11 +182,20 @@
 
     const renderSummary = () => {
       if (moodData.weekly.length === 0) {
-        weeklySummary.textContent = "No data for past weeks yet.";
+        weeklySummary.textContent = "No weekly summary yet.";
       } else {
         const lastSummary = moodData.weekly[moodData.weekly.length - 1];
         weeklySummary.textContent = `Last week's most common mood: ${lastSummary}`;
       }
+    };
+
+    const renderHistory = () => {
+      historyList.innerHTML = "";
+      moodData.weekly.forEach((week, index) => {
+        const listItem = document.createElement("li");
+        listItem.textContent = `Week ${index + 1}: ${week}`;
+        historyList.appendChild(listItem);
+      });
     };
 
     const saveMood = (mood) => {
@@ -180,6 +217,7 @@
         moodData.daily = {};
         localStorage.setItem("moodData", JSON.stringify(moodData));
         localStorage.setItem("lastReset", today);
+        renderHistory();
       }
     };
 
@@ -192,6 +230,7 @@
     handleWeeklyReset();
     renderChart();
     renderSummary();
+    renderHistory();
   </script>
 </body>
 </html>

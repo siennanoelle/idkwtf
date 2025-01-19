@@ -3,110 +3,146 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Mood Board Widget</title>
+  <title>Pink Mood Tracker</title>
   <style>
     body {
+      background-color: #ffe4ec;
+      font-family: 'Arial', sans-serif;
+      color: #f48fb1;
       margin: 0;
-      font-family: Arial, sans-serif;
-      background: linear-gradient(135deg, #ffdde1, #ee9ca7);
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      height: 100vh;
+      padding: 0;
     }
-
-    .mood-board {
-      width: 360px;
-      padding: 20px;
-      border-radius: 20px;
-      background: #fff;
-      box-shadow: 0 8px 20px rgba(0, 0, 0, 0.15);
+    .container {
       text-align: center;
-      color: #ee3a8c;
+      padding: 20px;
     }
-
-    h2 {
-      font-size: 24px;
-      margin-bottom: 15px;
-      color: #ff69b4;
-    }
-
-    .mood-input {
-      margin-bottom: 15px;
-    }
-
-    .mood-dropdown, .mood-notes {
-      width: 90%;
-      padding: 8px;
+    h1 {
+      font-size: 2.5rem;
       margin-bottom: 10px;
-      border: 2px solid #ffb6c1;
+    }
+    #mood-tracker {
+      border: 3px solid #f48fb1;
       border-radius: 10px;
-      outline: none;
+      padding: 20px;
+      background: linear-gradient(135deg, #ffe4ec, #f8bbd0);
+      box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.2);
     }
-
-    .mood-week-summary {
-      margin-top: 15px;
-      font-size: 18px;
-      color: #d6336c;
+    #mood-tracker textarea {
+      width: 80%;
+      height: 100px;
+      border: 1px solid #f48fb1;
+      border-radius: 5px;
+      padding: 10px;
+      font-size: 1rem;
+      color: #333;
+      background-color: #fff;
     }
-
-    .images {
-      margin-top: 15px;
+    #mood-tracker button {
+      background-color: #f48fb1;
+      color: white;
+      border: none;
+      border-radius: 5px;
+      padding: 10px 20px;
+      cursor: pointer;
+      font-size: 1rem;
+      margin-top: 10px;
     }
-
-    .images img {
-      width: 100%;
-      border-radius: 10px;
+    #mood-tracker button:hover {
+      background-color: #ec407a;
     }
-
-    .mood-chart {
-      margin-top: 15px;
+    #weekly-summary {
+      margin-top: 20px;
     }
-
-    .bar {
-      height: 20px;
-      margin: 5px 0;
-      border-radius: 10px;
-      background: #ff69b4;
-      animation: grow 2s ease-in-out;
-    }
-
-    @keyframes grow {
-      from {
-        width: 0;
-      }
-      to {
-        width: 75%; /* Example width for demo */
-      }
+    #inspirational-quote {
+      font-style: italic;
+      color: #f48fb1;
+      margin: 20px 0;
     }
   </style>
 </head>
 <body>
-  <div class="mood-board">
-    <h2>My Mood Board</h2>
-
-    <div class="mood-input">
-      <select class="mood-dropdown">
-        <option>😄 Happy</option>
-        <option>😢 Sad</option>
-        <option>😡 Angry</option>
-        <option>😌 Calm</option>
-        <option>🤔 Thoughtful</option>
-      </select>
-      <textarea class="mood-notes" placeholder="Write about your day..."></textarea>
-    </div>
-
-    <div class="mood-chart">
-      <p>Weekly Mood Summary:</p>
-      <div class="bar" style="width: 80%; background-color: #ff80ab;">😄 Happy</div>
-      <div class="bar" style="width: 40%; background-color: #ffb6c1;">😢 Sad</div>
-      <div class="bar" style="width: 60%; background-color: #ee3a8c;">😡 Angry</div>
-    </div>
-
-    <div class="images">
-      <p>Today's Inspiration:</p>
-      <img src="https://via.placeholder.com/320x200/ffb6c1/ffffff?text=You+are+Amazing!" alt="Inspirational Quote">
+  <div class="container">
+    <h1>🌸 Pink Mood Tracker 🌸</h1>
+    <div id="mood-tracker">
+      <textarea placeholder="How are you feeling today?"></textarea>
+      <br>
+      <button onclick="saveMood()">Save Mood</button>
+      <div id="weekly-summary">
+        <h2>🌟 Weekly Mood Summary 🌟</h2>
+        <p id="summary-text">Your weekly mood summary will appear here!</p>
+      </div>
+      <div id="inspirational-quote">Loading your daily dose of inspiration...</div>
     </div>
   </div>
+
+  <script>
+    // Inspirational Quotes Logic
+    async function fetchQuote() {
+      const quoteElement = document.getElementById("inspirational-quote");
+      try {
+        const response = await fetch("https://api.quotable.io/random");
+        if (!response.ok) throw new Error("Failed to fetch the quote");
+        const data = await response.json();
+        quoteElement.textContent = `"${data.content}" - ${data.author}`;
+      } catch (error) {
+        console.error(error);
+        quoteElement.textContent = "Stay positive and keep shining! 🌟"; // Fallback quote
+      }
+    }
+
+    // Fetch a quote on page load
+    fetchQuote();
+
+    // Save Mood Logic
+    function saveMood() {
+      const textarea = document.querySelector("#mood-tracker textarea");
+      const mood = textarea.value.trim();
+      if (!mood) {
+        alert("Please write your mood before saving!");
+        return;
+      }
+
+      // Save the mood to local storage
+      const today = new Date().toISOString().split("T")[0]; // Get today's date
+      localStorage.setItem(`mood-${today}`, mood);
+      textarea.value = "";
+
+      // Update Weekly Mood Summary
+      updateWeeklySummary();
+      alert("Your mood has been saved!");
+    }
+
+    // Update Weekly Summary Logic
+    function updateWeeklySummary() {
+      const summaryElement = document.getElementById("summary-text");
+      const now = new Date();
+      const pastWeek = Array.from({ length: 7 }, (_, i) => {
+        const date = new Date();
+        date.setDate(now.getDate() - i);
+        return date.toISOString().split("T")[0];
+      });
+
+      const moods = pastWeek.map((date) => ({
+        date,
+        mood: localStorage.getItem(`mood-${date}`) || "No mood recorded",
+      }));
+
+      const summaryHtml = moods
+        .map(
+          (entry) =>
+            `<strong>${entry.date}</strong>: ${
+              entry.mood.length > 20
+                ? entry.mood.substring(0, 20) + "..."
+                : entry.mood
+            }`
+        )
+        .join("<br>");
+
+      summaryElement.innerHTML = summaryHtml;
+    }
+
+    // Initial call to populate weekly summary
+    updateWeeklySummary();
+  </script>
 </body>
 </html>

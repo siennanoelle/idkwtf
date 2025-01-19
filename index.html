@@ -8,7 +8,7 @@
     body {
       background-color: #ffe4ec;
       font-family: 'Arial', sans-serif;
-      color: #d81b60; /* Updated color for better readability */
+      color: #d81b60; /* Improved readability */
       margin: 0;
       padding: 0;
     }
@@ -27,31 +27,40 @@
       background: linear-gradient(135deg, #ffe4ec, #f8bbd0);
       box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.2);
     }
-    #mood-tracker textarea {
-      width: 80%;
-      height: 100px;
-      border: 1px solid #f48fb1;
-      border-radius: 5px;
-      padding: 10px;
-      font-size: 1rem;
-      color: #333;
-      background-color: #fff;
+    #mood-options {
+      display: flex;
+      justify-content: center;
+      margin: 20px 0;
     }
-    #mood-tracker button {
+    .mood-option {
       background-color: #f48fb1;
       color: white;
       border: none;
       border-radius: 5px;
       padding: 10px 20px;
+      margin: 0 10px;
       cursor: pointer;
       font-size: 1rem;
-      margin-top: 10px;
     }
-    #mood-tracker button:hover {
+    .mood-option:hover {
       background-color: #ec407a;
     }
     #weekly-summary {
       margin-top: 20px;
+    }
+    .mood-text {
+      font-size: 1.2rem;
+      font-weight: bold;
+      color: #333; /* Neutral color for text clarity */
+    }
+    .angry {
+      color: #ff4444; /* Bold red for better readability */
+    }
+    .sad {
+      color: #5d99c6; /* Gentle blue for sad moods */
+    }
+    .happy {
+      color: #66bb6a; /* Vibrant green for happiness */
     }
   </style>
 </head>
@@ -59,9 +68,12 @@
   <div class="container">
     <h1>🌸 Pink Mood Tracker 🌸</h1>
     <div id="mood-tracker">
-      <textarea placeholder="How are you feeling today?"></textarea>
-      <br>
-      <button onclick="saveMood()">Save Mood</button>
+      <p class="mood-text">How are you feeling today?</p>
+      <div id="mood-options">
+        <button class="mood-option angry" onclick="saveMood('Angry')">Angry</button>
+        <button class="mood-option sad" onclick="saveMood('Sad')">Sad</button>
+        <button class="mood-option happy" onclick="saveMood('Happy')">Happy</button>
+      </div>
       <div id="weekly-summary">
         <h2>🌟 Weekly Mood Summary 🌟</h2>
         <p id="summary-text">Your weekly mood summary will appear here!</p>
@@ -71,22 +83,13 @@
 
   <script>
     // Save Mood Logic
-    function saveMood() {
-      const textarea = document.querySelector("#mood-tracker textarea");
-      const mood = textarea.value.trim();
-      if (!mood) {
-        alert("Please write your mood before saving!");
-        return;
-      }
-
-      // Save the mood to local storage
+    function saveMood(mood) {
       const today = new Date().toISOString().split("T")[0]; // Get today's date
       localStorage.setItem(`mood-${today}`, mood);
-      textarea.value = "";
 
       // Update Weekly Mood Summary
       updateWeeklySummary();
-      alert("Your mood has been saved!");
+      alert(`Your mood (${mood}) has been saved!`);
     }
 
     // Update Weekly Summary Logic
@@ -107,11 +110,7 @@
       const summaryHtml = moods
         .map(
           (entry) =>
-            `<strong>${entry.date}</strong>: ${
-              entry.mood.length > 20
-                ? entry.mood.substring(0, 20) + "..."
-                : entry.mood
-            }`
+            `<strong>${entry.date}</strong>: <span class="${entry.mood.toLowerCase()}">${entry.mood}</span>`
         )
         .join("<br>");
 

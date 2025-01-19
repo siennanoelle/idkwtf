@@ -6,143 +6,192 @@
   <title>Sakura Mood Tracker</title>
   <style>
     body {
-      font-family: 'Arial', sans-serif;
-      background: linear-gradient(to bottom, #ffe5f1, #ffd1e8);
-      color: #6b3a3a;
-      text-align: center;
+      font-family: Arial, sans-serif;
+      background-color: #FFD8E4; /* Sakura pink */
       margin: 0;
       padding: 0;
-    }
-    h1 {
-      font-size: 2rem;
-      color: #d94e7f;
-      margin-bottom: 10px;
-    }
-    .tracker-container {
-      width: 90%;
-      max-width: 600px;
-      margin: 0 auto;
-      background: #fff;
-      border-radius: 15px;
-      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
-      padding: 20px;
-    }
-    .mood-buttons {
       display: flex;
-      justify-content: space-between;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+      color: #333;
+    }
+
+    .widget-container {
+      background-color: #FFF;
+      border-radius: 15px;
+      padding: 20px;
+      box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+      width: 400px;
+    }
+
+    .widget-header {
+      text-align: center;
       margin-bottom: 20px;
     }
+
+    .widget-header h1 {
+      font-size: 24px;
+      color: #FF85A2; /* Sakura pink text */
+      margin: 0;
+    }
+
+    .mood-buttons {
+      display: flex;
+      justify-content: space-around;
+      margin-bottom: 20px;
+    }
+
     .mood-buttons button {
-      flex: 1;
-      margin: 0 5px;
-      padding: 10px;
+      background-color: #FFB7C5; /* Sakura pink */
       border: none;
-      border-radius: 8px;
-      font-size: 0.9rem;
+      border-radius: 50%;
+      width: 50px;
+      height: 50px;
+      font-size: 20px;
+      color: white;
       cursor: pointer;
-      background-color: #ffe5f1;
-      color: #6b3a3a;
+      outline: none;
       transition: transform 0.2s;
     }
+
     .mood-buttons button:hover {
-      transform: scale(1.05);
-      background-color: #ffd1e8;
+      transform: scale(1.1);
     }
-    .chart-container {
+
+    .mood-chart {
       margin-top: 20px;
+      text-align: center;
     }
+
+    .bar-container {
+      display: flex;
+      justify-content: space-around;
+    }
+
     .bar {
-      width: 30px;
-      height: 50px;
-      margin: 0 5px;
-      display: inline-block;
-      background-color: #f8a1c4;
+      width: 40px;
+      height: 100px;
+      display: flex;
+      flex-direction: column;
+      justify-content: flex-end;
+      background-color: #FFB7C5; /* Sakura pink */
       border-radius: 5px;
-      transition: height 0.3s ease-in-out;
+      position: relative;
     }
-    .bar-label {
-      font-size: 0.8rem;
+
+    .bar span {
+      background-color: #FF85A2;
+      display: block;
+      width: 100%;
+      border-radius: 5px;
+    }
+
+    .mood-label {
       margin-top: 5px;
+      font-size: 12px;
     }
-    footer {
-      margin-top: 15px;
-      font-size: 0.7rem;
-      color: #8c5a5a;
+
+    .weekly-summary {
+      margin-top: 20px;
+      text-align: center;
+      font-size: 14px;
+      color: #666;
     }
   </style>
 </head>
 <body>
-  <div class="tracker-container">
-    <h1>🌸 Sakura Mood Tracker 🌸</h1>
+  <div class="widget-container">
+    <div class="widget-header">
+      <h1>Sakura Mood Tracker</h1>
+    </div>
     <div class="mood-buttons">
-      <button onclick="logMood('Excited')">😆 Excited</button>
-      <button onclick="logMood('Happy')">😊 Happy</button>
-      <button onclick="logMood('Relaxed')">😌 Relaxed</button>
-      <button onclick="logMood('Sad')">😢 Sad</button>
-      <button onclick="logMood('Angry')">😡 Angry</button>
-      <button onclick="logMood('Depressed')">😞 Depressed</button>
+      <button data-mood="Excited">😄</button>
+      <button data-mood="Happy">😊</button>
+      <button data-mood="Relaxed">😌</button>
+      <button data-mood="Sad">😢</button>
+      <button data-mood="Angry">😡</button>
+      <button data-mood="Depressed">😭</button>
     </div>
-    <div class="chart-container">
-      <div id="chart"></div>
+    <div class="mood-chart">
+      <h2>This Week's Mood</h2>
+      <div class="bar-container" id="barContainer"></div>
     </div>
-    <footer>
-      Mood tracking resets every week. One entry per day is allowed. 🌸
-    </footer>
+    <div class="weekly-summary">
+      <p id="weeklySummary">No data for past weeks yet.</p>
+    </div>
   </div>
-  <script>
-    const moods = ['Excited', 'Happy', 'Relaxed', 'Sad', 'Angry', 'Depressed'];
-    const moodData = JSON.parse(localStorage.getItem('moodData')) || {};
-    const today = new Date().toDateString();
 
-    function logMood(mood) {
-      if (moodData[today]) {
-        alert('You can only log one mood per day!');
+  <script>
+    const moods = ["Excited", "Happy", "Relaxed", "Sad", "Angry", "Depressed"];
+    const moodData = JSON.parse(localStorage.getItem("moodData")) || {
+      daily: {},
+      weekly: [],
+    };
+
+    const today = new Date().toISOString().split("T")[0];
+    const barContainer = document.getElementById("barContainer");
+    const weeklySummary = document.getElementById("weeklySummary");
+
+    const renderChart = () => {
+      barContainer.innerHTML = "";
+      const moodCounts = moods.map(
+        (mood) => moodData.daily[mood] || 0
+      );
+      moodCounts.forEach((count, index) => {
+        const bar = document.createElement("div");
+        bar.classList.add("bar");
+        bar.style.height = `${count * 20}px`;
+        bar.innerHTML = `<span></span>`;
+        barContainer.appendChild(bar);
+
+        const label = document.createElement("div");
+        label.classList.add("mood-label");
+        label.textContent = moods[index];
+        bar.appendChild(label);
+      });
+    };
+
+    const renderSummary = () => {
+      if (moodData.weekly.length === 0) {
+        weeklySummary.textContent = "No data for past weeks yet.";
+      } else {
+        const lastSummary = moodData.weekly[moodData.weekly.length - 1];
+        weeklySummary.textContent = `Last week's most common mood: ${lastSummary}`;
+      }
+    };
+
+    const saveMood = (mood) => {
+      if (moodData.daily[today]) {
+        alert("You already recorded your mood for today.");
         return;
       }
+      moodData.daily[mood] = (moodData.daily[mood] || 0) + 1;
+      localStorage.setItem("moodData", JSON.stringify(moodData));
+      renderChart();
+    };
 
-      moodData[today] = mood;
-      localStorage.setItem('moodData', JSON.stringify(moodData));
-      updateChart();
-    }
-
-    function updateChart() {
-      const chartContainer = document.getElementById('chart');
-      chartContainer.innerHTML = '';
-      const counts = {};
-
-      // Initialize counts for each mood
-      moods.forEach(mood => (counts[mood] = 0));
-
-      // Count the moods
-      for (const date in moodData) {
-        counts[moodData[date]]++;
+    const handleWeeklyReset = () => {
+      const lastReset = localStorage.getItem("lastReset") || today;
+      const daysSinceReset = (new Date(today) - new Date(lastReset)) / (1000 * 60 * 60 * 24);
+      if (daysSinceReset >= 7) {
+        const mostCommonMood = moods.reduce((a, b) => moodData.daily[a] > moodData.daily[b] ? a : b, moods[0]);
+        moodData.weekly.push(mostCommonMood);
+        moodData.daily = {};
+        localStorage.setItem("moodData", JSON.stringify(moodData));
+        localStorage.setItem("lastReset", today);
       }
+    };
 
-      // Create the bars
-      for (const mood of moods) {
-        const barHeight = counts[mood] * 20; // Scale height
-        const bar = document.createElement('div');
-        bar.className = 'bar';
-        bar.style.height = `${barHeight}px`;
-        const label = document.createElement('div');
-        label.className = 'bar-label';
-        label.textContent = mood;
-        chartContainer.appendChild(bar);
-        chartContainer.appendChild(label);
-      }
-    }
+    document.querySelectorAll(".mood-buttons button").forEach((button) => {
+      button.addEventListener("click", () => {
+        saveMood(button.getAttribute("data-mood"));
+      });
+    });
 
-    // Weekly reset
-    const lastWeek = JSON.parse(localStorage.getItem('lastWeek')) || today;
-    const lastWeekDate = new Date(lastWeek);
-    const currentWeek = new Date();
-
-    if ((currentWeek - lastWeekDate) / (1000 * 60 * 60 * 24) >= 7) {
-      localStorage.clear();
-      localStorage.setItem('lastWeek', JSON.stringify(today));
-    }
-
-    updateChart();
+    handleWeeklyReset();
+    renderChart();
+    renderSummary();
   </script>
 </body>
 </html>

@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Mood Board Widget</title>
+  <style>
+    body {
+      margin: 0;
+      font-family: Arial, sans-serif;
+      background: linear-gradient(135deg, #ffdde1, #ee9ca7);
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+    }
+
+    .mood-board {
+      width: 360px;
+      padding: 20px;
+      border-radius: 20px;
+      background: #fff;
+      box-shadow: 0 8px 20px rgba(0, 0, 0, 0.15);
+      text-align: center;
+      color: #ee3a8c;
+    }
+
+    h2 {
+      font-size: 24px;
+      margin-bottom: 15px;
+      color: #ff69b4;
+    }
+
+    .mood-input {
+      margin-bottom: 15px;
+    }
+
+    .mood-dropdown, .mood-notes {
+      width: 90%;
+      padding: 8px;
+      margin-bottom: 10px;
+      border: 2px solid #ffb6c1;
+      border-radius: 10px;
+      outline: none;
+    }
+
+    .mood-week-summary {
+      margin-top: 15px;
+      font-size: 18px;
+      color: #d6336c;
+    }
+
+    .images {
+      margin-top: 15px;
+    }
+
+    .images img {
+      width: 100%;
+      border-radius: 10px;
+    }
+
+    .mood-chart {
+      margin-top: 15px;
+    }
+
+    .bar {
+      height: 20px;
+      margin: 5px 0;
+      border-radius: 10px;
+      background: #ff69b4;
+      animation: grow 2s ease-in-out;
+    }
+
+    @keyframes grow {
+      from {
+        width: 0;
+      }
+      to {
+        width: 75%; /* Example width for demo */
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="mood-board">
+    <h2>My Mood Board</h2>
+
+    <div class="mood-input">
+      <select class="mood-dropdown">
+        <option>😄 Happy</option>
+        <option>😢 Sad</option>
+        <option>😡 Angry</option>
+        <option>😌 Calm</option>
+        <option>🤔 Thoughtful</option>
+      </select>
+      <textarea class="mood-notes" placeholder="Write about your day..."></textarea>
+    </div>
+
+    <div class="mood-chart">
+      <p>Weekly Mood Summary:</p>
+      <div class="bar" style="width: 80%; background-color: #ff80ab;">😄 Happy</div>
+      <div class="bar" style="width: 40%; background-color: #ffb6c1;">😢 Sad</div>
+      <div class="bar" style="width: 60%; background-color: #ee3a8c;">😡 Angry</div>
+    </div>
+
+    <div class="images">
+      <p>Today's Inspiration:</p>
+      <img src="https://via.placeholder.com/320x200/ffb6c1/ffffff?text=You+are+Amazing!" alt="Inspirational Quote">
+    </div>
+  </div>
+</body>
+</html>

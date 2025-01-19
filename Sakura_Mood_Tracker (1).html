@@ -1,0 +1,120 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Daily Mood Tracker</title>
+    <style>
+        body {
+            font-family: 'Arial', sans-serif;
+            background-color: #fbeaf3;
+            margin: 0;
+            padding: 0;
+        }
+        h1 {
+            text-align: center;
+            color: #d88cb1;
+            font-size: 2.5em;
+            margin-top: 20px;
+            font-family: 'Cursive', sans-serif;
+        }
+        .tracker-container {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            margin: 20px;
+        }
+        .mood-button {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            background-color: #ffd7eb;
+            border: none;
+            border-radius: 20px;
+            padding: 10px 20px;
+            font-size: 1.2em;
+            color: #5a2a3e;
+            margin: 10px 0;
+            cursor: pointer;
+            width: 250px;
+            box-shadow: 2px 2px 5px rgba(0, 0, 0, 0.1);
+            transition: transform 0.2s, background-color 0.3s;
+        }
+        .mood-button:hover {
+            transform: scale(1.05);
+            background-color: #ffbfe1;
+        }
+        .bar-chart {
+            width: 80%;
+            margin-top: 30px;
+        }
+        .bar {
+            display: flex;
+            align-items: center;
+            margin: 8px 0;
+        }
+        .bar span {
+            display: inline-block;
+            width: 20%;
+            text-align: right;
+            margin-right: 10px;
+            color: #6d3753;
+        }
+        .bar div {
+            height: 20px;
+            border-radius: 10px;
+            background-color: #eaa7c1;
+            transition: width 0.5s ease-in-out;
+        }
+        footer {
+            text-align: center;
+            margin-top: 20px;
+            color: #6d3753;
+        }
+    </style>
+</head>
+<body>
+    <h1>🌸 Sakura Mood Tracker 🌸</h1>
+    <div class="tracker-container">
+        <button class="mood-button" onclick="updateMood('Excited')">😆 Excited</button>
+        <button class="mood-button" onclick="updateMood('Happy')">😊 Happy</button>
+        <button class="mood-button" onclick="updateMood('Relaxed')">😌 Relaxed</button>
+        <button class="mood-button" onclick="updateMood('Sad')">😢 Sad</button>
+        <button class="mood-button" onclick="updateMood('Angry')">😡 Angry</button>
+        <button class="mood-button" onclick="updateMood('Depressed')">😞 Depressed</button>
+    </div>
+    <div class="bar-chart">
+        <div class="bar"><span>Excited</span><div id="Excited-bar" style="width: 0%;"></div></div>
+        <div class="bar"><span>Happy</span><div id="Happy-bar" style="width: 0%;"></div></div>
+        <div class="bar"><span>Relaxed</span><div id="Relaxed-bar" style="width: 0%;"></div></div>
+        <div class="bar"><span>Sad</span><div id="Sad-bar" style="width: 0%;"></div></div>
+        <div class="bar"><span>Angry</span><div id="Angry-bar" style="width: 0%;"></div></div>
+        <div class="bar"><span>Depressed</span><div id="Depressed-bar" style="width: 0%;"></div></div>
+    </div>
+    <footer>
+        Track your mood every day to see your weekly trends.
+    </footer>
+    <script>
+        const moodCounts = {
+            'Excited': 0,
+            'Happy': 0,
+            'Relaxed': 0,
+            'Sad': 0,
+            'Angry': 0,
+            'Depressed': 0
+        };
+        function updateMood(mood) {
+            moodCounts[mood] += 1;
+            updateChart();
+        }
+        function updateChart() {
+            for (const mood in moodCounts) {
+                const bar = document.getElementById(`${mood}-bar`);
+                const percentage = Math.min((moodCounts[mood] / 7) * 100, 100);
+                bar.style.width = percentage + '%';
+            }
+        }
+    </script>
+</body>
+</html>

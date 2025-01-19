@@ -1,120 +1,148 @@
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Daily Mood Tracker</title>
-    <style>
-        body {
-            font-family: 'Arial', sans-serif;
-            background-color: #fbeaf3;
-            margin: 0;
-            padding: 0;
-        }
-        h1 {
-            text-align: center;
-            color: #d88cb1;
-            font-size: 2.5em;
-            margin-top: 20px;
-            font-family: 'Cursive', sans-serif;
-        }
-        .tracker-container {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            margin: 20px;
-        }
-        .mood-button {
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            background-color: #ffd7eb;
-            border: none;
-            border-radius: 20px;
-            padding: 10px 20px;
-            font-size: 1.2em;
-            color: #5a2a3e;
-            margin: 10px 0;
-            cursor: pointer;
-            width: 250px;
-            box-shadow: 2px 2px 5px rgba(0, 0, 0, 0.1);
-            transition: transform 0.2s, background-color 0.3s;
-        }
-        .mood-button:hover {
-            transform: scale(1.05);
-            background-color: #ffbfe1;
-        }
-        .bar-chart {
-            width: 80%;
-            margin-top: 30px;
-        }
-        .bar {
-            display: flex;
-            align-items: center;
-            margin: 8px 0;
-        }
-        .bar span {
-            display: inline-block;
-            width: 20%;
-            text-align: right;
-            margin-right: 10px;
-            color: #6d3753;
-        }
-        .bar div {
-            height: 20px;
-            border-radius: 10px;
-            background-color: #eaa7c1;
-            transition: width 0.5s ease-in-out;
-        }
-        footer {
-            text-align: center;
-            margin-top: 20px;
-            color: #6d3753;
-        }
-    </style>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Sakura Mood Tracker</title>
+  <style>
+    body {
+      font-family: 'Arial', sans-serif;
+      background: linear-gradient(to bottom, #ffe5f1, #ffd1e8);
+      color: #6b3a3a;
+      text-align: center;
+      margin: 0;
+      padding: 0;
+    }
+    h1 {
+      font-size: 2rem;
+      color: #d94e7f;
+      margin-bottom: 10px;
+    }
+    .tracker-container {
+      width: 90%;
+      max-width: 600px;
+      margin: 0 auto;
+      background: #fff;
+      border-radius: 15px;
+      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+      padding: 20px;
+    }
+    .mood-buttons {
+      display: flex;
+      justify-content: space-between;
+      margin-bottom: 20px;
+    }
+    .mood-buttons button {
+      flex: 1;
+      margin: 0 5px;
+      padding: 10px;
+      border: none;
+      border-radius: 8px;
+      font-size: 0.9rem;
+      cursor: pointer;
+      background-color: #ffe5f1;
+      color: #6b3a3a;
+      transition: transform 0.2s;
+    }
+    .mood-buttons button:hover {
+      transform: scale(1.05);
+      background-color: #ffd1e8;
+    }
+    .chart-container {
+      margin-top: 20px;
+    }
+    .bar {
+      width: 30px;
+      height: 50px;
+      margin: 0 5px;
+      display: inline-block;
+      background-color: #f8a1c4;
+      border-radius: 5px;
+      transition: height 0.3s ease-in-out;
+    }
+    .bar-label {
+      font-size: 0.8rem;
+      margin-top: 5px;
+    }
+    footer {
+      margin-top: 15px;
+      font-size: 0.7rem;
+      color: #8c5a5a;
+    }
+  </style>
 </head>
 <body>
+  <div class="tracker-container">
     <h1>🌸 Sakura Mood Tracker 🌸</h1>
-    <div class="tracker-container">
-        <button class="mood-button" onclick="updateMood('Excited')">😆 Excited</button>
-        <button class="mood-button" onclick="updateMood('Happy')">😊 Happy</button>
-        <button class="mood-button" onclick="updateMood('Relaxed')">😌 Relaxed</button>
-        <button class="mood-button" onclick="updateMood('Sad')">😢 Sad</button>
-        <button class="mood-button" onclick="updateMood('Angry')">😡 Angry</button>
-        <button class="mood-button" onclick="updateMood('Depressed')">😞 Depressed</button>
+    <div class="mood-buttons">
+      <button onclick="logMood('Excited')">😆 Excited</button>
+      <button onclick="logMood('Happy')">😊 Happy</button>
+      <button onclick="logMood('Relaxed')">😌 Relaxed</button>
+      <button onclick="logMood('Sad')">😢 Sad</button>
+      <button onclick="logMood('Angry')">😡 Angry</button>
+      <button onclick="logMood('Depressed')">😞 Depressed</button>
     </div>
-    <div class="bar-chart">
-        <div class="bar"><span>Excited</span><div id="Excited-bar" style="width: 0%;"></div></div>
-        <div class="bar"><span>Happy</span><div id="Happy-bar" style="width: 0%;"></div></div>
-        <div class="bar"><span>Relaxed</span><div id="Relaxed-bar" style="width: 0%;"></div></div>
-        <div class="bar"><span>Sad</span><div id="Sad-bar" style="width: 0%;"></div></div>
-        <div class="bar"><span>Angry</span><div id="Angry-bar" style="width: 0%;"></div></div>
-        <div class="bar"><span>Depressed</span><div id="Depressed-bar" style="width: 0%;"></div></div>
+    <div class="chart-container">
+      <div id="chart"></div>
     </div>
     <footer>
-        Track your mood every day to see your weekly trends.
+      Mood tracking resets every week. One entry per day is allowed. 🌸
     </footer>
-    <script>
-        const moodCounts = {
-            'Excited': 0,
-            'Happy': 0,
-            'Relaxed': 0,
-            'Sad': 0,
-            'Angry': 0,
-            'Depressed': 0
-        };
-        function updateMood(mood) {
-            moodCounts[mood] += 1;
-            updateChart();
-        }
-        function updateChart() {
-            for (const mood in moodCounts) {
-                const bar = document.getElementById(`${mood}-bar`);
-                const percentage = Math.min((moodCounts[mood] / 7) * 100, 100);
-                bar.style.width = percentage + '%';
-            }
-        }
-    </script>
+  </div>
+  <script>
+    const moods = ['Excited', 'Happy', 'Relaxed', 'Sad', 'Angry', 'Depressed'];
+    const moodData = JSON.parse(localStorage.getItem('moodData')) || {};
+    const today = new Date().toDateString();
+
+    function logMood(mood) {
+      if (moodData[today]) {
+        alert('You can only log one mood per day!');
+        return;
+      }
+
+      moodData[today] = mood;
+      localStorage.setItem('moodData', JSON.stringify(moodData));
+      updateChart();
+    }
+
+    function updateChart() {
+      const chartContainer = document.getElementById('chart');
+      chartContainer.innerHTML = '';
+      const counts = {};
+
+      // Initialize counts for each mood
+      moods.forEach(mood => (counts[mood] = 0));
+
+      // Count the moods
+      for (const date in moodData) {
+        counts[moodData[date]]++;
+      }
+
+      // Create the bars
+      for (const mood of moods) {
+        const barHeight = counts[mood] * 20; // Scale height
+        const bar = document.createElement('div');
+        bar.className = 'bar';
+        bar.style.height = `${barHeight}px`;
+        const label = document.createElement('div');
+        label.className = 'bar-label';
+        label.textContent = mood;
+        chartContainer.appendChild(bar);
+        chartContainer.appendChild(label);
+      }
+    }
+
+    // Weekly reset
+    const lastWeek = JSON.parse(localStorage.getItem('lastWeek')) || today;
+    const lastWeekDate = new Date(lastWeek);
+    const currentWeek = new Date();
+
+    if ((currentWeek - lastWeekDate) / (1000 * 60 * 60 * 24) >= 7) {
+      localStorage.clear();
+      localStorage.setItem('lastWeek', JSON.stringify(today));
+    }
+
+    updateChart();
+  </script>
 </body>
 </html>
